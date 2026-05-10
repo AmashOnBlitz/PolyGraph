@@ -5,3 +5,5 @@
 #include <strsafe.h>
 #include <iostream>
 #include <d2d1.h>
+#include <dwrite.h>
+#include <windowsx.h>

@@ -1,22 +1,28 @@
 #include "pch.h"
 #include "graphics.h"
 
-#define ReleaseD2D1Item(x) if (x) x->Release();
+#define ReleaseD2D1Item(x) if (x) x->Release(); x = NULL;
 #define GuardD2D1Failure(x) if (x != S_OK) return false;
+#define MousePosValid(x) ((x) > 0)
+
 Graphics::Graphics() :
 	mHWnd(NULL),
 	mpFact(nullptr),
+	mpFactDWrite(nullptr),
 	mpRend(nullptr),
 	mpBrOne(nullptr),
-	mpGraph(nullptr)
+	mpGraph(nullptr),
+	mpTxtFmt(nullptr)
 {
 }
 
 Graphics::~Graphics()
 {
 	ReleaseD2D1Item(mpFact);
+	ReleaseD2D1Item(mpFactDWrite);
 	ReleaseD2D1Item(mpRend);
 	ReleaseD2D1Item(mpBrOne);
+	ReleaseD2D1Item(mpTxtFmt);
 }
 
 bool Graphics::Init(HWND hWnd) 
@@ -25,6 +31,22 @@ bool Graphics::Init(HWND hWnd)
 
 	HRESULT hRes = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &mpFact);
 	GuardD2D1Failure(hRes);
+
+	hRes = DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), (IUnknown**)(&mpFactDWrite));
+	GuardD2D1Failure(hRes);
+
+	hRes = mpFactDWrite->CreateTextFormat(
+		L"Gabriola",
+		NULL,
+		DWRITE_FONT_WEIGHT_REGULAR,
+		DWRITE_FONT_STYLE_NORMAL,
+		DWRITE_FONT_STRETCH_NORMAL,
+		25.0f,
+		L"en-us",
+		&mpTxtFmt
+	);
+	mpTxtFmt->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+	mpTxtFmt->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
 
 	RECT rect;
 	GetClientRect(mHWnd, &rect);
@@ -52,6 +74,19 @@ void Graphics::Resize(UINT width, UINT height)
 	if (mpRend) mpRend->Resize(D2D1::SizeU(width, height));
 }
 
+void Graphics::MouseMov(int x, int y)
+{
+	this->MousePosX = -1;
+	this->MousePosY = -1;
+	if (MousePosValid(x)) {
+		this->MousePosX = x;
+	}
+	if (MousePosValid(y)) {
+		this->MousePosY = y;
+	}
+	InvalidateRect(mHWnd, NULL, FALSE);
+}
+
 void Graphics::Render()
 {
 	RECT rect;
@@ -65,6 +100,7 @@ void Graphics::Render()
 		D2D1_TEXT_ANTIALIAS_MODE_CLEARTYPE
 	);
 	RendGraph(rect);
+	RendCoordHint(rect);
 	mpRend->EndDraw();
 }
 
@@ -322,6 +358,30 @@ void Graphics::RendGraph(RECT rect)
 		);
 	}
 
+}
+
+void Graphics::RendCoordHint(RECT rect)
+{
+	float dpi = (float)(GetDpiForWindow(mHWnd));
+	float dpiX = dpi;
+	float dpiY = dpi;
+	float dpiScaleX = dpiX / 96.0f;
+	float dpiScaleY = dpiY / 96.0f;
+	const int MouseCoordHintWidth = 200;
+	const int MouseCoordHintHeight = 25;
+	const int MouseCoordHintPadding = 5;
+	D2D1_RECT_F txtRect = D2D1::RectF(
+		(MousePosX + MouseCoordHintPadding) / dpiScaleX,
+		(MousePosY + MouseCoordHintPadding) / dpiScaleY,
+		(MousePosX + MouseCoordHintPadding + MouseCoordHintWidth) / dpiScaleX,
+		(MousePosY + MouseCoordHintPadding + MouseCoordHintHeight) / dpiScaleY
+	);
+	mpBrOne->SetColor(D2D1::ColorF(D2D1::ColorF::Green));
+	mpRend->FillRectangle(txtRect, mpBrOne);
+	TCHAR txt[256];
+	StringCchPrintf(txt, 256, _TEXT("(%d, %d)"), MousePosX, MousePosY);
+	mpBrOne->SetColor(D2D1::ColorF(D2D1::ColorF::Black));
+	mpRend->DrawText(txt, lstrlen(txt), mpTxtFmt, txtRect, mpBrOne);
 }
 
 int Graphics::ConvRatioToInt(int ratio10, int Max)
