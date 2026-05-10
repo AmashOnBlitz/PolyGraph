@@ -15,6 +15,7 @@ public:
 	void SetYAxisColor(const D2D1::ColorF col);
 	void SetXRefLinesColor(const D2D1::ColorF col);
 	void SetYRefLinesColor(const D2D1::ColorF col);
+	void SetInnerRefLinesColor(const D2D1::ColorF col);
 	void SetGridSpace(int x);
 
 	int GetSpacingWidth();
@@ -27,6 +28,7 @@ public:
 	D2D1::ColorF GetYAxisColor() const; 
 	D2D1::ColorF GetXRefLinesColor() const;
 	D2D1::ColorF GetYRefLinesColor() const;
+	D2D1::ColorF GetInnerRefLinesColor() const;
 
 private:
 
@@ -34,11 +36,14 @@ private:
 	int scaleY = scaleX;
 	int SpacingWidth = 10;
 	int SpacingHeight = SpacingWidth;
-	int GridSpace = 20;
+	int GridSpace = 50;
 
 	D2D1::ColorF XAxisCol = D2D1::ColorF(D2D1::ColorF::Red);
 	D2D1::ColorF YAxisCol = D2D1::ColorF(XAxisCol);
 
 	D2D1::ColorF XRefLinesCol = D2D1::ColorF(D2D1::ColorF::Gray);
 	D2D1::ColorF YRefLinesCol = D2D1::ColorF(XRefLinesCol);
+
+	D2D1::ColorF InnerRefLinesCol = D2D1::ColorF(D2D1::ColorF(0.85f, 0.85f, 0.85f, 1.0f));
+	//D2D1::ColorF InnerRefLinesCol = D2D1::ColorF(D2D1::ColorF::Green);
 };

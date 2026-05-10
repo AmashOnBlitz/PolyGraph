@@ -49,6 +49,11 @@ void Graph::SetYRefLinesColor(D2D1::ColorF col)
 	this->YRefLinesCol = D2D1::ColorF(col);
 }
 
+void Graph::SetInnerRefLinesColor(const D2D1::ColorF col)
+{
+	this->InnerRefLinesCol = D2D1::ColorF(col);
+}
+
 void Graph::SetGridSpace(int x)
 {
 	this->GridSpace = x;
@@ -97,4 +102,9 @@ D2D1::ColorF Graph::GetXRefLinesColor() const
 D2D1::ColorF Graph::GetYRefLinesColor() const
 {
 	return this->YRefLinesCol;
+}
+
+D2D1::ColorF Graph::GetInnerRefLinesColor() const
+{
+	return this->InnerRefLinesCol;
 }

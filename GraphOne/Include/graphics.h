@@ -20,6 +20,7 @@ public:
 private:
 	void RendGraph(RECT rect);
 	int ConvRatioToInt(int ratio10, int Max);
+	float Sharp(int value);
 private:
 	HWND mHWnd;
 	ID2D1Factory* mpFact;
