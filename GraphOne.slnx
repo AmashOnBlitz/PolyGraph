@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="GraphOne/GraphOne.vcxproj" Id="33a04e26-f4e6-465d-8495-771bf958d7eb" />
+</Solution>
