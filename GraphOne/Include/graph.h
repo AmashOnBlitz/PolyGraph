@@ -16,6 +16,7 @@ public:
 	void SetXRefLinesColor(const D2D1::ColorF col);
 	void SetYRefLinesColor(const D2D1::ColorF col);
 	void SetInnerRefLinesColor(const D2D1::ColorF col);
+	void SetHighlightedLineColor(const D2D1::ColorF col);
 	void SetGridSpace(int x);
 
 	int GetSpacingWidth();
@@ -29,6 +30,7 @@ public:
 	D2D1::ColorF GetXRefLinesColor() const;
 	D2D1::ColorF GetYRefLinesColor() const;
 	D2D1::ColorF GetInnerRefLinesColor() const;
+	D2D1::ColorF GetHighlightedLineColor() const;
 
 private:
 
@@ -46,4 +48,6 @@ private:
 
 	D2D1::ColorF InnerRefLinesCol = D2D1::ColorF(D2D1::ColorF(0.85f, 0.85f, 0.85f, 1.0f));
 	//D2D1::ColorF InnerRefLinesCol = D2D1::ColorF(D2D1::ColorF::Green);
+
+	D2D1::ColorF HighlightedLineCol = D2D1::ColorF(D2D1::ColorF::Green);
 };

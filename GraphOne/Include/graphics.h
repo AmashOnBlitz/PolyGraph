@@ -30,6 +30,7 @@ private:
 	ID2D1Factory* mpFact;
 	IDWriteFactory* mpFactDWrite;
 	IDWriteTextFormat* mpTxtFmt;
+	IDWriteTextLayout* mpTxtLyout;
 	ID2D1HwndRenderTarget* mpRend;
 	ID2D1SolidColorBrush* mpBrOne;
 	Graph* mpGraph;

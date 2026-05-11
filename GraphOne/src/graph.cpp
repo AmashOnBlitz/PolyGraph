@@ -54,6 +54,11 @@ void Graph::SetInnerRefLinesColor(const D2D1::ColorF col)
 	this->InnerRefLinesCol = D2D1::ColorF(col);
 }
 
+void Graph::SetHighlightedLineColor(const D2D1::ColorF col)
+{
+	this->HighlightedLineCol = D2D1::ColorF(col);
+}
+
 void Graph::SetGridSpace(int x)
 {
 	this->GridSpace = x;
@@ -107,4 +112,9 @@ D2D1::ColorF Graph::GetYRefLinesColor() const
 D2D1::ColorF Graph::GetInnerRefLinesColor() const
 {
 	return this->InnerRefLinesCol;
+}
+
+D2D1::ColorF Graph::GetHighlightedLineColor() const
+{
+	return this->HighlightedLineCol;
 }

@@ -3,6 +3,7 @@
 
 #define ReleaseD2D1Item(x) if (x) x->Release(); x = NULL;
 #define GuardD2D1Failure(x) if (x != S_OK) return false;
+#define GuardD2D1FailureVoid(x) if (x != S_OK) return;
 #define MousePosValid(x) ((x) > 0)
 
 Graphics::Graphics() :
@@ -12,7 +13,8 @@ Graphics::Graphics() :
 	mpRend(nullptr),
 	mpBrOne(nullptr),
 	mpGraph(nullptr),
-	mpTxtFmt(nullptr)
+	mpTxtFmt(nullptr),
+	mpTxtLyout(nullptr)
 {
 }
 
@@ -36,12 +38,12 @@ bool Graphics::Init(HWND hWnd)
 	GuardD2D1Failure(hRes);
 
 	hRes = mpFactDWrite->CreateTextFormat(
-		L"Gabriola",
+		L"Bahnschrift",
 		NULL,
 		DWRITE_FONT_WEIGHT_REGULAR,
 		DWRITE_FONT_STYLE_NORMAL,
 		DWRITE_FONT_STRETCH_NORMAL,
-		25.0f,
+		16.0f,
 		L"en-us",
 		&mpTxtFmt
 	);
@@ -367,21 +369,50 @@ void Graphics::RendCoordHint(RECT rect)
 	float dpiY = dpi;
 	float dpiScaleX = dpiX / 96.0f;
 	float dpiScaleY = dpiY / 96.0f;
-	const int MouseCoordHintWidth = 200;
-	const int MouseCoordHintHeight = 25;
-	const int MouseCoordHintPadding = 5;
-	D2D1_RECT_F txtRect = D2D1::RectF(
-		(MousePosX + MouseCoordHintPadding) / dpiScaleX,
-		(MousePosY + MouseCoordHintPadding) / dpiScaleY,
-		(MousePosX + MouseCoordHintPadding + MouseCoordHintWidth) / dpiScaleX,
-		(MousePosY + MouseCoordHintPadding + MouseCoordHintHeight) / dpiScaleY
-	);
-	mpBrOne->SetColor(D2D1::ColorF(D2D1::ColorF::Green));
-	mpRend->FillRectangle(txtRect, mpBrOne);
+	const int MouseCoordHintPadding = 10;
+	const int MouseCoordHintInnerPadding = 5;
+
 	TCHAR txt[256];
 	StringCchPrintf(txt, 256, _TEXT("(%d, %d)"), MousePosX, MousePosY);
+
+	ReleaseD2D1Item(mpTxtLyout);
+
+	HRESULT Hr = mpFactDWrite->CreateTextLayout(
+		txt,
+		lstrlen(txt),
+		mpTxtFmt,
+		400,
+		25,
+		&mpTxtLyout
+	);
+	GuardD2D1FailureVoid(Hr);
+
+	DWRITE_TEXT_METRICS txtMetrics;
+	Hr = mpTxtLyout->GetMetrics(&txtMetrics);
+	GuardD2D1FailureVoid(Hr);
+
+	D2D1_RECT_F hintRect = D2D1::RectF(
+		(MousePosX + MouseCoordHintPadding) / dpiScaleX,
+		(MousePosY + MouseCoordHintPadding) / dpiScaleY,
+		(MousePosX + MouseCoordHintPadding) / dpiScaleX + txtMetrics.width + (MouseCoordHintInnerPadding*2),
+		(MousePosY + MouseCoordHintPadding) / dpiScaleY + (txtMetrics.height) + (MouseCoordHintInnerPadding * 2)
+	);
+	mpBrOne->SetColor(D2D1::ColorF(D2D1::ColorF::Green));
+	mpRend->FillRectangle(hintRect, mpBrOne);
+
+	D2D1_RECT_F txtRect = D2D1::RectF(
+		hintRect.left + MouseCoordHintInnerPadding,
+		hintRect.top + MouseCoordHintInnerPadding,
+		hintRect.right - MouseCoordHintInnerPadding,
+		hintRect.bottom - MouseCoordHintInnerPadding
+	);
 	mpBrOne->SetColor(D2D1::ColorF(D2D1::ColorF::Black));
-	mpRend->DrawText(txt, lstrlen(txt), mpTxtFmt, txtRect, mpBrOne);
+
+	D2D1_POINT_2F textPos = D2D1::Point2F(
+		hintRect.left + MouseCoordHintInnerPadding,
+		hintRect.top + MouseCoordHintInnerPadding
+	);
+	mpRend->DrawTextLayout(textPos, mpTxtLyout, mpBrOne);
 }
 
 int Graphics::ConvRatioToInt(int ratio10, int Max)
