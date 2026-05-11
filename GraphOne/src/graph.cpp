@@ -54,14 +54,36 @@ void Graph::SetInnerRefLinesColor(const D2D1::ColorF col)
 	this->InnerRefLinesCol = D2D1::ColorF(col);
 }
 
-void Graph::SetHighlightedLineColor(const D2D1::ColorF col)
+void Graph::SetUsrIndicatorLineColor(const D2D1::ColorF col)
 {
-	this->HighlightedLineCol = D2D1::ColorF(col);
+	this->UsrIndicatorLineCol = D2D1::ColorF(col);
 }
 
 void Graph::SetGridSpace(int x)
 {
 	this->GridSpace = x;
+}
+
+void Graph::SetShowXUsrIndicator(bool b)
+{
+	this->showXUsrIndicator = b;
+}
+
+void Graph::SetShowYUsrIndicator(bool b)
+{
+	this->showYUsrIndicator = b;
+}
+
+void Graph::SetShowRawCoords(bool b)
+{
+	this->showRawCoords = b;
+	this->showProcessedValues = !b;
+}
+
+void Graph::SetShowProcessedValues(bool b)
+{
+	this->showProcessedValues = b;
+	this->showRawCoords = !b;
 }
 
 int Graph::GetSpacingWidth()
@@ -89,6 +111,26 @@ int Graph::GetGridSpace()
 	return this->GridSpace;
 }
 
+bool Graph::GetShowXUsrIndicator()
+{
+	return this->showXUsrIndicator;
+}
+
+bool Graph::GetShowYUsrIndicator()
+{
+	return this->showYUsrIndicator;
+}
+
+bool Graph::GetShowRawCoords()
+{
+	return this->showRawCoords;
+}
+
+bool Graph::GetShowProcessedValues()
+{
+	return this->showProcessedValues;
+}
+
 D2D1::ColorF Graph::GetXAxisColor() const
 {
 	return this->XAxisCol;
@@ -114,7 +156,7 @@ D2D1::ColorF Graph::GetInnerRefLinesColor() const
 	return this->InnerRefLinesCol;
 }
 
-D2D1::ColorF Graph::GetHighlightedLineColor() const
+D2D1::ColorF Graph::GetUsrIndicatorLineColor() const
 {
-	return this->HighlightedLineCol;
+	return this->UsrIndicatorLineCol;
 }

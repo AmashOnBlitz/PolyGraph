@@ -90,6 +90,8 @@ void APP::Init()
 		return;
 	}
 	mpGraph = new Graph();
+	mpGraph->SetShowXUsrIndicator(true);
+	mpGraph->SetShowYUsrIndicator(true);
 	mInitFailure = false;
 }
 

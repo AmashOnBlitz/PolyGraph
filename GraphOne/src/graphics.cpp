@@ -113,15 +113,15 @@ void Graphics::RendGraph(RECT rect)
 	const float AXISLINEWIDTH = 1.5f;
 	const float INNER_IND_L_WIDTH =  1.0f;
 
-	int xStart = rect.left + ConvRatioToInt(
+	xStart = rect.left + ConvRatioToInt(
 		mRColWidthRatio10,
 		rect.right - rect.left
 	) + PADDING;
-	int xEnd = ((rect.right - rect.left) - PADDING);
-	int yStart = (rect.top + PADDING);
-	int yEnd = ((rect.bottom - rect.top) - PADDING);
-	int xMid = ((xStart + xEnd) / 2);
-	int yMid = ((yStart + yEnd) / 2);
+	xEnd = ((rect.right - rect.left) - PADDING);
+	yStart = (rect.top + PADDING);
+	yEnd = ((rect.bottom - rect.top) - PADDING);
+	xMid = ((xStart + xEnd) / 2);
+	yMid = ((yStart + yEnd) / 2);
 
 	D2D1::ColorF BgCol = D2D1::ColorF::WhiteSmoke;
 	if (mpGraph == nullptr) BgCol = D2D1::ColorF::Black;
@@ -182,31 +182,31 @@ void Graphics::RendGraph(RECT rect)
 					INDICATORLINEWIDTH
 				);
 			}
-				int step = mpGraph->GetGridSpace() / 10;
-				int xPos = 0;
-				mpBrOne->SetColor(D2D1::ColorF(mpGraph->GetInnerRefLinesColor()));
-				for (int i = 1; i <= 9; i++) {
-					xPos = currentPos - (i * step);
-					if (xPos < xStart) break;
-					mpRend->DrawLine(
-						D2D1::Point2F(
-							Sharp(xPos),
-							yStart
-						),
-						D2D1::Point2F(
-							Sharp(xPos),
-							yEnd
-						),
-						mpBrOne,
-						INNER_IND_L_WIDTH
-					);
-				}
-				mpBrOne->SetColor(D2D1::ColorF(mpGraph->GetXRefLinesColor()));
-				currentPos -= mpGraph->GetGridSpace();
+			int step = mpGraph->GetGridSpace() / 10;
+			int xPos = 0;
+			mpBrOne->SetColor(D2D1::ColorF(mpGraph->GetInnerRefLinesColor()));
+			for (int i = 1; i <= 9; i++) {
+				xPos = currentPos - (i * step);
+				if (xPos < xStart) break;
+				mpRend->DrawLine(
+					D2D1::Point2F(
+						Sharp(xPos),
+						yStart
+					),
+					D2D1::Point2F(
+						Sharp(xPos),
+						yEnd
+					),
+					mpBrOne,
+					INNER_IND_L_WIDTH
+				);
+			}
+			mpBrOne->SetColor(D2D1::ColorF(mpGraph->GetXRefLinesColor()));
+			currentPos -= mpGraph->GetGridSpace();
 		}
 		//Right Side X
 		currentPos = xMid;
-		while (currentPos < xEnd) 
+		while (currentPos < xEnd)
 		{
 			if (currentPos != xMid) {
 				mpRend->DrawLine(
@@ -222,27 +222,27 @@ void Graphics::RendGraph(RECT rect)
 					INDICATORLINEWIDTH
 				);
 			}
-				int step = mpGraph->GetGridSpace() / 10;
-				int xPos = 0;
-				mpBrOne->SetColor(D2D1::ColorF(mpGraph->GetInnerRefLinesColor()));
-				for (int i = 1; i <= 9; i++) {
-					xPos = currentPos + (i * step);
-					if (xPos > xEnd) break;
-					mpRend->DrawLine(
-						D2D1::Point2F(
-							Sharp(xPos),
-							yStart
-						),
-						D2D1::Point2F(
-							Sharp(xPos),
-							yEnd
-						),
-						mpBrOne,
-						INNER_IND_L_WIDTH
-					);
-				}
-				mpBrOne->SetColor(D2D1::ColorF(mpGraph->GetXRefLinesColor()));
-				currentPos += mpGraph->GetGridSpace();
+			int step = mpGraph->GetGridSpace() / 10;
+			int xPos = 0;
+			mpBrOne->SetColor(D2D1::ColorF(mpGraph->GetInnerRefLinesColor()));
+			for (int i = 1; i <= 9; i++) {
+				xPos = currentPos + (i * step);
+				if (xPos > xEnd) break;
+				mpRend->DrawLine(
+					D2D1::Point2F(
+						Sharp(xPos),
+						yStart
+					),
+					D2D1::Point2F(
+						Sharp(xPos),
+						yEnd
+					),
+					mpBrOne,
+					INNER_IND_L_WIDTH
+				);
+			}
+			mpBrOne->SetColor(D2D1::ColorF(mpGraph->GetXRefLinesColor()));
+			currentPos += mpGraph->GetGridSpace();
 		}
 
 		mpBrOne->SetColor(D2D1::ColorF(mpGraph->GetYRefLinesColor()));
@@ -265,27 +265,27 @@ void Graphics::RendGraph(RECT rect)
 					INDICATORLINEWIDTH
 				);
 			}
-				int step = mpGraph->GetGridSpace() / 10;
-				int yPos = 0;
-				mpBrOne->SetColor(D2D1::ColorF(mpGraph->GetInnerRefLinesColor()));
-				for (int i = 1; i <= 9; i++) {
-					yPos = currentPos - (i * step);
-					if (yPos < yStart) break;
-					mpRend->DrawLine(
-						D2D1::Point2F(
-							xStart,
-							Sharp(yPos)
-						),
-						D2D1::Point2F(
-							xEnd,
-							Sharp(yPos)
-						),
-						mpBrOne,
-						INNER_IND_L_WIDTH
-					);
-				}
-				mpBrOne->SetColor(D2D1::ColorF(mpGraph->GetYRefLinesColor()));
-				currentPos -= mpGraph->GetGridSpace();
+			int step = mpGraph->GetGridSpace() / 10;
+			int yPos = 0;
+			mpBrOne->SetColor(D2D1::ColorF(mpGraph->GetInnerRefLinesColor()));
+			for (int i = 1; i <= 9; i++) {
+				yPos = currentPos - (i * step);
+				if (yPos < yStart) break;
+				mpRend->DrawLine(
+					D2D1::Point2F(
+						xStart,
+						Sharp(yPos)
+					),
+					D2D1::Point2F(
+						xEnd,
+						Sharp(yPos)
+					),
+					mpBrOne,
+					INNER_IND_L_WIDTH
+				);
+			}
+			mpBrOne->SetColor(D2D1::ColorF(mpGraph->GetYRefLinesColor()));
+			currentPos -= mpGraph->GetGridSpace();
 		}
 
 		//Bottom Side Y
@@ -306,27 +306,27 @@ void Graphics::RendGraph(RECT rect)
 					INDICATORLINEWIDTH
 				);
 			}
-				int step = mpGraph->GetGridSpace() / 10;
-				int yPos = 0;
-				mpBrOne->SetColor(D2D1::ColorF(mpGraph->GetInnerRefLinesColor()));
-				for (int i = 1; i <= 9; i++) {
-					yPos = currentPos + (i * step);
-					if (yPos > yEnd) break;
-					mpRend->DrawLine(
-						D2D1::Point2F(
-							xStart,
-							Sharp(yPos)
-						),
-						D2D1::Point2F(
-							xEnd,
-							Sharp(yPos)
-						),
-						mpBrOne,
-						INNER_IND_L_WIDTH
-					);
-				}
-				mpBrOne->SetColor(D2D1::ColorF(mpGraph->GetYRefLinesColor()));
-				currentPos += mpGraph->GetGridSpace();
+			int step = mpGraph->GetGridSpace() / 10;
+			int yPos = 0;
+			mpBrOne->SetColor(D2D1::ColorF(mpGraph->GetInnerRefLinesColor()));
+			for (int i = 1; i <= 9; i++) {
+				yPos = currentPos + (i * step);
+				if (yPos > yEnd) break;
+				mpRend->DrawLine(
+					D2D1::Point2F(
+						xStart,
+						Sharp(yPos)
+					),
+					D2D1::Point2F(
+						xEnd,
+						Sharp(yPos)
+					),
+					mpBrOne,
+					INNER_IND_L_WIDTH
+				);
+			}
+			mpBrOne->SetColor(D2D1::ColorF(mpGraph->GetYRefLinesColor()));
+			currentPos += mpGraph->GetGridSpace();
 		}
 
 		//X axis
@@ -339,7 +339,7 @@ void Graphics::RendGraph(RECT rect)
 			D2D1::Point2F(
 				xEnd,
 				Sharp(yMid)
-				),
+			),
 			mpBrOne,
 			AXISLINEWIDTH
 		);
@@ -358,12 +358,65 @@ void Graphics::RendGraph(RECT rect)
 			mpBrOne,
 			AXISLINEWIDTH
 		);
+		if (
+			IsPointInBound(
+				MousePosX,
+				MousePosY,
+				yStart,
+				yEnd,
+				xStart,
+				xEnd
+			)
+			) 
+		{
+			//Usr Indicator X
+			mpBrOne->SetColor(D2D1::ColorF(mpGraph->GetUsrIndicatorLineColor()));
+			if (mpGraph->GetShowXUsrIndicator() && MousePosValid(MousePosX)) {
+				mpRend->DrawLine(
+					D2D1::Point2F(
+						MousePosX,
+						yStart
+					),
+					D2D1::Point2F(
+						MousePosX,
+						yEnd
+					),
+					mpBrOne
+				);
+			}
+
+			//Usr Indicator Y
+			if (mpGraph->GetShowYUsrIndicator() && MousePosValid(MousePosY)) {
+				mpRend->DrawLine(
+					D2D1::Point2F(
+						xStart,
+						MousePosY
+					),
+					D2D1::Point2F(
+						xEnd,
+						MousePosY
+					),
+					mpBrOne
+				);
+			}
+		}
 	}
 
 }
 
 void Graphics::RendCoordHint(RECT rect)
 {
+	if (!IsPointInBound(
+		MousePosX,
+		MousePosY,
+		yStart,
+		yEnd,
+		xStart,
+		xEnd
+	)) 
+	{
+		return;
+	}
 	float dpi = (float)(GetDpiForWindow(mHWnd));
 	float dpiX = dpi;
 	float dpiY = dpi;
@@ -371,12 +424,29 @@ void Graphics::RendCoordHint(RECT rect)
 	float dpiScaleY = dpiY / 96.0f;
 	const int MouseCoordHintPadding = 10;
 	const int MouseCoordHintInnerPadding = 5;
-
 	TCHAR txt[256];
-	StringCchPrintf(txt, 256, _TEXT("(%d, %d)"), MousePosX, MousePosY);
+
+	if (mpGraph->GetShowRawCoords()) {
+		StringCchPrintf(txt, 256, _TEXT("(%d, %d)"), MousePosX-xStart, MousePosY-yStart);
+	}
+	else
+	{
+		double graphX = (double)(MousePosX - xMid) * mpGraph->GetScaleX() / mpGraph->GetGridSpace();
+		double graphY = (double)(yMid - MousePosY) *mpGraph->GetScaleY() / mpGraph->GetGridSpace();
+
+		int roundedX = (int)round(graphX);
+		int roundedY = (int)round(graphY);
+
+		StringCchPrintf(
+			txt,
+			256,
+			_TEXT("(%d, %d)"),
+			roundedX,
+			roundedY
+		);
+	}
 
 	ReleaseD2D1Item(mpTxtLyout);
-
 	HRESULT Hr = mpFactDWrite->CreateTextLayout(
 		txt,
 		lstrlen(txt),
@@ -397,15 +467,33 @@ void Graphics::RendCoordHint(RECT rect)
 		(MousePosX + MouseCoordHintPadding) / dpiScaleX + txtMetrics.width + (MouseCoordHintInnerPadding*2),
 		(MousePosY + MouseCoordHintPadding) / dpiScaleY + (txtMetrics.height) + (MouseCoordHintInnerPadding * 2)
 	);
+	float width = hintRect.right - hintRect.left;
+	float height = hintRect.bottom - hintRect.top;
+	
+	//Right guard
+	if (hintRect.right > xEnd / dpiScaleX) {
+		hintRect.left = (MousePosX - MouseCoordHintPadding) / dpiScaleX - width;
+		hintRect.right = hintRect.left + width;
+	}
+	//Left guard
+	if (hintRect.left < xStart / dpiScaleX) {
+		hintRect.left = xStart / dpiScaleX;
+		hintRect.right = hintRect.left + width;
+	}
+	//Top guard
+	if (hintRect.top < yStart / dpiScaleY) {
+		hintRect.top = yStart / dpiScaleY;
+		hintRect.bottom = hintRect.top + height;
+	}
+	//Bottom guard
+	if (hintRect.bottom > yEnd / dpiScaleY) {
+		hintRect.top = (MousePosY - MouseCoordHintPadding) / dpiScaleY - height;
+		hintRect.bottom = hintRect.top + height;
+	}
+
 	mpBrOne->SetColor(D2D1::ColorF(D2D1::ColorF::Green));
 	mpRend->FillRectangle(hintRect, mpBrOne);
 
-	D2D1_RECT_F txtRect = D2D1::RectF(
-		hintRect.left + MouseCoordHintInnerPadding,
-		hintRect.top + MouseCoordHintInnerPadding,
-		hintRect.right - MouseCoordHintInnerPadding,
-		hintRect.bottom - MouseCoordHintInnerPadding
-	);
 	mpBrOne->SetColor(D2D1::ColorF(D2D1::ColorF::Black));
 
 	D2D1_POINT_2F textPos = D2D1::Point2F(
@@ -423,6 +511,11 @@ int Graphics::ConvRatioToInt(int ratio10, int Max)
 inline float Graphics::Sharp(int value)
 {
 	return static_cast<float>(value) + 0.5f;
+}
+
+bool Graphics::IsPointInBound(int x, int y, int yStart, int yEnd, int xStart, int xEnd)
+{
+	return ((y >= yStart && y <= yEnd) && (x >= xStart && x <= xEnd));
 }
 
 void Graphics::SetGraph(Graph* gf)
