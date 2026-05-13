@@ -105,7 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjDir)Include;$(ProjDir)pch</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjDir)Widgets;$(ProjDir)Include;$(ProjDir)pch</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -124,7 +124,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjDir)Include;$(ProjDir)pch</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjDir)Widgets;$(ProjDir)Include;$(ProjDir)pch</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -143,12 +143,15 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="Widgets\CheckBox.cpp" />
+    <ClCompile Include="Widgets\CheckBoxBlueprint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\App.h" />
     <ClInclude Include="Include\graph.h" />
     <ClInclude Include="Include\graphics.h" />
     <ClInclude Include="Pch\pch.h" />
+    <ClInclude Include="Widgets\CheckBox.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
