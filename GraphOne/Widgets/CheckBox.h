@@ -1,5 +1,6 @@
 #pragma once
 #include <d2d1.h>
+#include <dwrite.h>
 
 class CheckboxBlueprint
 {
@@ -56,6 +57,16 @@ public:
 	CheckBox() = delete;
 	CheckBox(CheckboxBlueprint blueprint);
 	~CheckBox();
+
+	void Render(
+		ID2D1HwndRenderTarget* mpRend,
+		IDWriteFactory* mpFactDWrite,
+		ID2D1SolidColorBrush* mpBrOne,
+		IDWriteTextFormat* mpTxtFmt,
+		IDWriteTextLayout* mpTxtLyout,
+		int x,
+		int y
+	);
 	void SetBlueprint(CheckboxBlueprint blueprint);
 	CheckboxBlueprint GetBlueprint();
 

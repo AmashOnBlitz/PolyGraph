@@ -538,6 +538,7 @@ void Graphics::RendWidgetsPanel(RECT rect)
 
 	D2D1_RECT_F configArea = widgetPanelAr;
 	configArea.top = widgetPanelAr.top + widgetPanelHeight / 2.0f;
+	const float layoutHeight = 25.0f;
 
 	TCHAR txt[]= _TEXT("Configurations");
 	ReleaseD2D1Item(mpTxtLyout);
@@ -546,9 +547,10 @@ void Graphics::RendWidgetsPanel(RECT rect)
 		lstrlen(txt),
 		mpTxtFmt,
 		400,
-		25,
+		layoutHeight,
 		&mpTxtLyout
 	);
+
 	GuardD2D1FailureVoid(Hr);
 	DWRITE_TEXT_METRICS txtMetric;
 	Hr = mpTxtLyout->GetMetrics(&txtMetric);
@@ -559,7 +561,7 @@ void Graphics::RendWidgetsPanel(RECT rect)
 	float textHeight = txtMetric.height;
 	float textStartX = configArea.left + 5;
 	float textStartY = configArea.top;
-	float lineCenterY = textStartY + textHeight / 2.0f;
+	float lineCenterY = textStartY + layoutHeight / 2.0f + 1.0f;
 
 	mpBrOne->SetColor(D2D1::ColorF(D2D1::ColorF::Gray));
 
@@ -596,52 +598,7 @@ void Graphics::RendConfigPanel(D2D1_RECT_F configPanel, int yStart, int xStart)
 	int yOffset = 0;
 
 	CheckBox CBoxShowXIndLine = CheckBox(checkBoxBprint);
-	RendCheckBox(CBoxShowXIndLine, checkBoxesArea.left, checkBoxesArea.top + yOffset);
-}
-
-void Graphics::RendCheckBox(CheckBox& cbox, int x, int y)
-{
-	const int BoxRounding = 4;
-	mpBrOne->SetColor(D2D1::ColorF(
-		(cbox.GetBlueprint().GetChecked()) ? cbox.GetBlueprint().GetCheckedCol() : cbox.GetBlueprint().GetUncheckedCol())
-	);
-	mpRend->FillRoundedRectangle(
-		D2D1::RoundedRect(
-			D2D1::RectF(
-				x,
-				y,
-				x + cbox.GetBlueprint().GetWidth(),
-				y + cbox.GetBlueprint().GetHeight()
-			),
-			BoxRounding,
-			BoxRounding
-		),
-		mpBrOne
-	);
-
-	mpBrOne->SetColor(D2D1::ColorF(D2D1::ColorF::Black));
-	std::string s = cbox.GetBlueprint().GetText();
-	std::wstring ws(s.begin(), s.end());
-	TCHAR txt[2048];
-	StringCchPrintf(txt, 2048, _TEXT("%s"), ws.c_str());
-	ReleaseD2D1Item(mpTxtLyout);
-	HRESULT Hr = mpFactDWrite->CreateTextLayout(
-		txt,
-		lstrlen(txt),
-		mpTxtFmt,
-		400,
-		25,
-		&mpTxtLyout
-	);
-	GuardD2D1FailureVoid(Hr);
-	DWRITE_TEXT_METRICS txtMetric;
-	Hr = mpTxtLyout->GetMetrics(&txtMetric);
-	GuardD2D1FailureVoid(Hr);
-	mpRend->DrawTextLayout(
-		D2D1::Point2F(100, 100),
-		mpTxtLyout,
-		mpBrOne
-	);
+	CBoxShowXIndLine.Render(mpRend,mpFactDWrite,mpBrOne,mpTxtFmt,mpTxtLyout, checkBoxesArea.left, checkBoxesArea.top + yOffset);
 }
 
 int Graphics::ConvRatioToInt(int ratio10, int Max)

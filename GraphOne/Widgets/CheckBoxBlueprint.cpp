@@ -3,13 +3,6 @@
 
 #define FLAG_CHECKBOX_DATA_CHANGED this->SetDataChangedFlag();
 
-//CheckboxBlueprint::CheckboxBlueprint(int w, int h, bool checked)
-//	: mChecked(checked),
-//	mWidth(w),
-//	mHeight((h < 0)? w : h)
-//{
-//}
-
 CheckboxBlueprint::CheckboxBlueprint(
 	std::string text,
 	bool checked,
