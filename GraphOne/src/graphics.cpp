@@ -111,7 +111,6 @@ void Graphics::InitCheckBoxes()
 
 }
 
-
 void Graphics::Resize(UINT width, UINT height)
 {
 	if (mpRend) mpRend->Resize(D2D1::SizeU(width, height));
@@ -227,9 +226,13 @@ void Graphics::RendGraph(RECT rect)
 		);
 	}
 	else {
+		const int numbSize = 16;
+		TCHAR numb[numbSize];
 		mpBrOne->SetColor(D2D1::ColorF(mpGraph->GetXRefLinesColor()));
+
 		//Left Side X
 		int currentPos = gf_xMid;
+		int leftXBoxIteration = 0;
 		while (currentPos > gf_xStart)
 		{
 			if (currentPos != gf_xMid) {
@@ -245,7 +248,39 @@ void Graphics::RendGraph(RECT rect)
 					mpBrOne,
 					INDICATORLINEWIDTH
 				);
+
+				StringCchPrintf(
+					numb,
+					numbSize,
+					_TEXT("%d"),
+					leftXBoxIteration * mpGraph->GetScaleX()
+				);
+
+				ReleaseD2D1Item(mpTxtLyout);
+				HRESULT Hr = mpFactDWrite->CreateTextLayout(
+					numb,
+					lstrlen(numb),
+					mpTxtFmt,
+					25,
+					20,
+					&mpTxtLyout
+				);
+				GuardD2D1FailureVoid(Hr);
+
+				DWRITE_TEXT_METRICS txtMetrics;
+				Hr = mpTxtLyout->GetMetrics(&txtMetrics);
+				GuardD2D1FailureVoid(Hr);
+
+				D2D1_POINT_2F textPos = D2D1::Point2F(
+					Sharp(currentPos) + (txtMetrics.layoutWidth/2),
+					gf_yStart
+				);
+				mpRend->DrawTextLayout(textPos, mpTxtLyout, mpBrOne);
+				ReleaseD2D1Item(mpTxtLyout);
+
+				leftXBoxIteration++;
 			}
+
 			int step = mpGraph->GetGridSpace() / 10;
 			int xPos = 0;
 			mpBrOne->SetColor(D2D1::ColorF(mpGraph->GetInnerRefLinesColor()));

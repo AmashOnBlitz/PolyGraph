@@ -8,6 +8,8 @@ CheckboxBlueprint::CheckboxBlueprint(
 	bool checked,
 	int w,
 	int h,
+	int xRoundRadius,
+	int yRoundRadius,
 	D2D1::ColorF defaultCol,
 	D2D1::ColorF checkedCol,
 	D2D1::ColorF tickCol
@@ -16,6 +18,8 @@ CheckboxBlueprint::CheckboxBlueprint(
 	mChecked(checked),
 	mWidth(w),
 	mHeight((h < 0)? w : h),
+	mXRoundRadius(xRoundRadius),
+	mYRoundRadius((yRoundRadius < 0)? xRoundRadius : yRoundRadius),
 	mUncheckedCol(defaultCol),
 	mCheckedCol(checkedCol),
 	mTickCol(tickCol)
@@ -68,6 +72,16 @@ void CheckboxBlueprint::SetTickCol(D2D1::ColorF col)
 	FLAG_CHECKBOX_DATA_CHANGED;
 }
 
+void CheckboxBlueprint::SetXRoundRadius(int radius)
+{
+	this->mXRoundRadius = radius;
+}
+
+void CheckboxBlueprint::SetYRoundRadius(int radius)
+{
+	this->mYRoundRadius = radius;
+}
+
 int CheckboxBlueprint::GetHeight()
 {
 	return this->mHeight;
@@ -76,6 +90,16 @@ int CheckboxBlueprint::GetHeight()
 int CheckboxBlueprint::GetWidth()
 {
 	return this->mWidth;
+}
+
+int CheckboxBlueprint::GetXRoundRadius()
+{
+	return this->mXRoundRadius;
+}
+
+int CheckboxBlueprint::GetYRoundRadius()
+{
+	return this->mYRoundRadius;
 }
 
 std::string CheckboxBlueprint::GetText()

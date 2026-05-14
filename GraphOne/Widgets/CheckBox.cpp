@@ -26,7 +26,6 @@ void CheckBox::Render(
 )
 {
 	CheckBox cbox = *this;
-	const int boxRounding = 4;
 	const int textSpacing = 4;
 	checkBoxRect = D2D1::RectF(
 		x,
@@ -41,11 +40,43 @@ void CheckBox::Render(
 	mpRend->FillRoundedRectangle(
 		D2D1::RoundedRect(
 			checkBoxRect,
-			boxRounding,
-			boxRounding
+			cbox.GetBlueprint().GetXRoundRadius(),
+			cbox.GetBlueprint().GetYRoundRadius()
 		),
 		mpBrOne
 	);
+
+	if (cbox.GetBlueprint().GetChecked()) {
+		mpBrOne->SetColor(D2D1::ColorF(cbox.GetBlueprint().GetTickCol()));
+		float geometryRatio = 3.0f / 4.0f;
+		float inverseGeometryRatio = 1.0f / 4.0f;
+		int cBoxWidth = (checkBoxRect.right - checkBoxRect.left);
+		int cBoxHeight = (checkBoxRect.bottom - checkBoxRect.top);
+		mpRend->DrawLine(
+			D2D1::Point2F(
+				checkBoxRect.left + (cBoxWidth * inverseGeometryRatio),
+				checkBoxRect.top + (cBoxHeight * 0.5f)
+			),
+			D2D1::Point2F(
+				checkBoxRect.left + (cBoxWidth * 0.5f),
+				checkBoxRect.top + (cBoxHeight * geometryRatio)
+			),
+			mpBrOne,
+			2.0f
+		);
+		mpRend->DrawLine(
+			D2D1::Point2F(
+				checkBoxRect.left + (cBoxWidth * 0.5f),
+				checkBoxRect.top + (cBoxHeight * geometryRatio)
+			),
+			D2D1::Point2F(
+				checkBoxRect.left + (cBoxWidth * geometryRatio),
+				checkBoxRect.top + (cBoxHeight * inverseGeometryRatio)
+			),
+			mpBrOne,
+			2.0f
+		);
+	}
 
 	mpBrOne->SetColor(D2D1::ColorF(D2D1::ColorF::Black));
 	std::string s = cbox.GetBlueprint().GetText();

@@ -5,12 +5,14 @@
 class CheckboxBlueprint
 {
 public:
-	// -1 means same as width
+	// -1 means same as width or x
 	CheckboxBlueprint(
 		std::string text,
 		bool checked = false,
 		int w = 20,
 		int h = -1,
+		int xRoundRadius = 4,
+		int yRoundRadius = -1,
 		D2D1::ColorF uncheckedCol = D2D1::ColorF::Gray,
 		D2D1::ColorF checkedCol = D2D1::ColorF::Green,
 		D2D1::ColorF tickCol = D2D1::ColorF::White
@@ -24,9 +26,13 @@ public:
 	void SetUncheckedCol(D2D1::ColorF col);
 	void SetCheckedCol(D2D1::ColorF col);
 	void SetTickCol(D2D1::ColorF col);
+	void SetXRoundRadius(int radius);
+	void SetYRoundRadius(int radius);
 
 	int GetHeight();
 	int GetWidth();
+	int GetXRoundRadius();
+	int GetYRoundRadius();
 	std::string GetText();
 	bool GetChecked();
 	bool PollDataChangedFlag();
@@ -44,7 +50,8 @@ private:
 	bool mDataChanged = false;
 	int mWidth; 
 	int mHeight;
-
+	int mXRoundRadius;
+	int mYRoundRadius;
 	D2D1::ColorF mUncheckedCol = D2D1::ColorF::GhostWhite;
 	D2D1::ColorF mCheckedCol = D2D1::ColorF::Green;
 	D2D1::ColorF mTickCol = D2D1::ColorF::White;
