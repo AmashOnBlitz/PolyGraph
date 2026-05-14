@@ -4,14 +4,13 @@
 class CheckboxBlueprint
 {
 public:
-	// D2D1::ColorF::GhostWhite col defaults to transparent 
 	// -1 means same as width
 	CheckboxBlueprint(
 		std::string text,
 		bool checked = false,
 		int w = 20,
 		int h = -1,
-		D2D1::ColorF uncheckedCol = D2D1::ColorF::GhostWhite,
+		D2D1::ColorF uncheckedCol = D2D1::ColorF::Gray,
 		D2D1::ColorF checkedCol = D2D1::ColorF::Green,
 		D2D1::ColorF tickCol = D2D1::ColorF::White
 	);

@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <dwrite.h>
 #include <graph.h>
+#include "CheckBox.h"
 
 class Graphics
 {
@@ -24,6 +25,8 @@ private:
 	void RendGraph(RECT rect);
 	void RendCoordHint(RECT rect);
 	void RendWidgetsPanel(RECT rect);
+	void RendConfigPanel(D2D1_RECT_F configPanel, int yStart, int xStart);
+	void RendCheckBox(CheckBox& cbox, int x, int y);
 	int ConvRatioToInt(int ratio10, int Max);
 	float Sharp(int value);
 	bool IsPointInBound(int x, int y, int yStart, int yEnd, int xStart, int xEnd);

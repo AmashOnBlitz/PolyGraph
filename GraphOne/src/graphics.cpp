@@ -1,10 +1,14 @@
 #include "pch.h"
 #include "graphics.h"
+#include "CheckBox.h"
 
 #define ReleaseD2D1Item(x) if (x) x->Release(); x = NULL;
 #define GuardD2D1Failure(x) if (x != S_OK) return false;
 #define GuardD2D1FailureVoid(x) if (x != S_OK) return;
 #define MousePosValid(x) ((x) > 0)
+#define TEXT_FONT_PRIMARY L"SF Pro Text"
+#define TEXT_FONT_SECONDARY L"Bahnschrift"
+//#define TEXT_FONT L"SF Pro Display"
 
 Graphics::Graphics() :
 	mHWnd(NULL),
@@ -38,7 +42,7 @@ bool Graphics::Init(HWND hWnd)
 	GuardD2D1Failure(hRes);
 
 	hRes = mpFactDWrite->CreateTextFormat(
-		L"Bahnschrift",
+		TEXT_FONT_PRIMARY,
 		NULL,
 		DWRITE_FONT_WEIGHT_REGULAR,
 		DWRITE_FONT_STYLE_NORMAL,
@@ -47,6 +51,19 @@ bool Graphics::Init(HWND hWnd)
 		L"en-us",
 		&mpTxtFmt
 	);
+	if (FAILED(hRes))
+	{
+		hRes = mpFactDWrite->CreateTextFormat(
+			TEXT_FONT_SECONDARY,
+			NULL,
+			DWRITE_FONT_WEIGHT_REGULAR,
+			DWRITE_FONT_STYLE_NORMAL,
+			DWRITE_FONT_STRETCH_NORMAL,
+			16.0f,
+			L"en-us",
+			&mpTxtFmt
+		);
+	}
 	mpTxtFmt->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
 	mpTxtFmt->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
 
@@ -519,7 +536,10 @@ void Graphics::RendWidgetsPanel(RECT rect)
 	mpBrOne->SetColor(D2D1::ColorF(D2D1::ColorF::FloralWhite));
 	mpRend->FillRectangle(widgetPanelAr, mpBrOne);
 
-	TCHAR txt[]= _TEXT(" Configurations");
+	D2D1_RECT_F configArea = widgetPanelAr;
+	configArea.top = widgetPanelAr.top + widgetPanelHeight / 2.0f;
+
+	TCHAR txt[]= _TEXT("Configurations");
 	ReleaseD2D1Item(mpTxtLyout);
 	HRESULT Hr = mpFactDWrite->CreateTextLayout(
 		txt,
@@ -533,30 +553,93 @@ void Graphics::RendWidgetsPanel(RECT rect)
 	DWRITE_TEXT_METRICS txtMetric;
 	Hr = mpTxtLyout->GetMetrics(&txtMetric);
 	GuardD2D1FailureVoid(Hr);
+
+	float configAreaHeight = configArea.bottom - configArea.top;
 	float textWidth = txtMetric.width;
 	float textHeight = txtMetric.height;
-
-	float textStartX = widgetPanelAr.left + 5;
-	float textY = widgetPanelAr.top + (widgetPanelHeight - textHeight) / 2.0f;
-	float centerY = widgetPanelAr.top + widgetPanelHeight / 2.0f;
+	float textStartX = configArea.left + 5;
+	float textStartY = configArea.top;
+	float lineCenterY = textStartY + textHeight / 2.0f;
 
 	mpBrOne->SetColor(D2D1::ColorF(D2D1::ColorF::Gray));
 
 	mpRend->DrawTextLayout(
-		D2D1::Point2F(textStartX, textY),
+		D2D1::Point2F(Sharp(textStartX), Sharp(textStartY)),
 		mpTxtLyout,
 		mpBrOne
 	);
 
 	mpRend->DrawLine(
 		D2D1::Point2F(
-			textStartX + textWidth + 10,
-			centerY
+			Sharp(textStartX + textWidth + 10),
+			Sharp(lineCenterY)
 		),
 		D2D1::Point2F(
-			widgetPanelAr.right - 5,
-			centerY
+			Sharp(configArea.right - 5),
+			Sharp(lineCenterY)
 		),
+		mpBrOne
+	);
+
+	RendConfigPanel(configArea, (textStartY + textHeight + 10), textStartX);
+}
+
+void Graphics::RendConfigPanel(D2D1_RECT_F configPanel, int yStart, int xStart)
+{
+	D2D1_RECT_F checkBoxesArea = configPanel;
+	checkBoxesArea.top = yStart;
+	checkBoxesArea.left = xStart;
+
+	CheckboxBlueprint checkBoxBprint = CheckboxBlueprint("Show X Indicator Line");
+	const int CBoxHeight = checkBoxBprint.GetHeight();
+	const int CBoxYSpacing = CBoxHeight + 5;
+	int yOffset = 0;
+
+	CheckBox CBoxShowXIndLine = CheckBox(checkBoxBprint);
+	RendCheckBox(CBoxShowXIndLine, checkBoxesArea.left, checkBoxesArea.top + yOffset);
+}
+
+void Graphics::RendCheckBox(CheckBox& cbox, int x, int y)
+{
+	const int BoxRounding = 4;
+	mpBrOne->SetColor(D2D1::ColorF(
+		(cbox.GetBlueprint().GetChecked()) ? cbox.GetBlueprint().GetCheckedCol() : cbox.GetBlueprint().GetUncheckedCol())
+	);
+	mpRend->FillRoundedRectangle(
+		D2D1::RoundedRect(
+			D2D1::RectF(
+				x,
+				y,
+				x + cbox.GetBlueprint().GetWidth(),
+				y + cbox.GetBlueprint().GetHeight()
+			),
+			BoxRounding,
+			BoxRounding
+		),
+		mpBrOne
+	);
+
+	mpBrOne->SetColor(D2D1::ColorF(D2D1::ColorF::Black));
+	std::string s = cbox.GetBlueprint().GetText();
+	std::wstring ws(s.begin(), s.end());
+	TCHAR txt[2048];
+	StringCchPrintf(txt, 2048, _TEXT("%s"), ws.c_str());
+	ReleaseD2D1Item(mpTxtLyout);
+	HRESULT Hr = mpFactDWrite->CreateTextLayout(
+		txt,
+		lstrlen(txt),
+		mpTxtFmt,
+		400,
+		25,
+		&mpTxtLyout
+	);
+	GuardD2D1FailureVoid(Hr);
+	DWRITE_TEXT_METRICS txtMetric;
+	Hr = mpTxtLyout->GetMetrics(&txtMetric);
+	GuardD2D1FailureVoid(Hr);
+	mpRend->DrawTextLayout(
+		D2D1::Point2F(100, 100),
+		mpTxtLyout,
 		mpBrOne
 	);
 }
