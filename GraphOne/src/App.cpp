@@ -107,6 +107,12 @@ LRESULT APP::WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		if (gfx) gfx->MouseMov(x, y);
 		break;
 	}
+	case WM_LBUTTONUP: {
+		int x = GET_X_LPARAM(lParam);
+		int y = GET_Y_LPARAM(lParam);
+		if (gfx) gfx->MouseUp(x, y);
+		break;
+	}
 	case WM_SIZE:
 	{
 		if (gfx)

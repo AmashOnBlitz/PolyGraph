@@ -4,6 +4,8 @@
 #include <tchar.h>
 #include <strsafe.h>
 #include <iostream>
+#include <vector>
+#include <functional>
 #include <d2d1.h>
 #include <dwrite.h>
 #include <windowsx.h>

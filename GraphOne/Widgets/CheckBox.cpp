@@ -6,7 +6,8 @@
 #define GuardD2D1FailureVoid(x) if (x != S_OK) return;
 
 CheckBox::CheckBox(CheckboxBlueprint blueprint)
-	: mBlueprint(blueprint)
+	: mBlueprint(blueprint),
+	checkBoxRect({})
 {
 }
 
@@ -19,7 +20,7 @@ void CheckBox::Render(
 	IDWriteFactory* mpFactDWrite,
 	ID2D1SolidColorBrush* mpBrOne,
 	IDWriteTextFormat* mpTxtFmt,
-	IDWriteTextLayout* mpTxtLyout,
+	IDWriteTextLayout*& mpTxtLyout,
 	int x,
 	int y
 )
@@ -27,7 +28,7 @@ void CheckBox::Render(
 	CheckBox cbox = *this;
 	const int boxRounding = 4;
 	const int textSpacing = 4;
-	D2D1_RECT_F checkBoxRect = D2D1::RectF(
+	checkBoxRect = D2D1::RectF(
 		x,
 		y,
 		x + cbox.GetBlueprint().GetWidth(),
@@ -74,12 +75,28 @@ void CheckBox::Render(
 	);
 }
 
+void CheckBox::PassMouseClick(int xPos, int yPos)
+{
+	if (!isPointInBound(xPos, yPos, checkBoxRect)) return;
+	this->GetBlueprint().SetChecked(!this->GetBlueprint().GetChecked());
+}
+
 void CheckBox::SetBlueprint(CheckboxBlueprint blueprint)
 {
 	this->mBlueprint = blueprint;
 }
 
-CheckboxBlueprint CheckBox::GetBlueprint()
+CheckboxBlueprint& CheckBox::GetBlueprint()
 {
 	return this->mBlueprint;
+}
+
+D2D1_RECT_F CheckBox::GetCheckBoxRect()
+{
+	return this->checkBoxRect;
+}
+
+bool CheckBox::isPointInBound(int x, int y, D2D1_RECT_F& rect)
+{
+	return ((x >= rect.left && x <= rect.right) && (y >= rect.top && y <= rect.bottom));
 }

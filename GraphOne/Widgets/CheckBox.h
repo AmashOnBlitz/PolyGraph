@@ -63,13 +63,18 @@ public:
 		IDWriteFactory* mpFactDWrite,
 		ID2D1SolidColorBrush* mpBrOne,
 		IDWriteTextFormat* mpTxtFmt,
-		IDWriteTextLayout* mpTxtLyout,
+		IDWriteTextLayout*& mpTxtLyout,
 		int x,
 		int y
 	);
+	void PassMouseClick(int xPos, int yPos);
 	void SetBlueprint(CheckboxBlueprint blueprint);
-	CheckboxBlueprint GetBlueprint();
+	CheckboxBlueprint& GetBlueprint();
+	D2D1_RECT_F GetCheckBoxRect();
 
 private:
+	bool isPointInBound(int x, int y, D2D1_RECT_F& rect);
+private:
 	CheckboxBlueprint mBlueprint;
+	D2D1_RECT_F checkBoxRect;
 };

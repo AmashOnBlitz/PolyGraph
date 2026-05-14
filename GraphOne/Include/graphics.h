@@ -3,6 +3,7 @@
 #include <dwrite.h>
 #include <graph.h>
 #include "CheckBox.h"
+#include <vector>
 
 class Graphics
 {
@@ -13,15 +14,18 @@ public:
 
 	void Resize(UINT width, UINT height);
 	void MouseMov(int x, int y);
+	void MouseUp(int x, int y);
 	void Render();
 	void SetGraph(Graph* gf);
 	void SetRColWidthRatio(int i10);
+	void SetShowCoordHint(bool show);
 
 	int GetRColWidthRatio();
-
+	bool GetShowCoordHint();
 	Graph* GetGraph();
 
 private:
+	void InitCheckBoxes();
 	void RendGraph(RECT rect);
 	void RendCoordHint(RECT rect);
 	void RendWidgetsPanel(RECT rect);
@@ -29,6 +33,7 @@ private:
 	int ConvRatioToInt(int ratio10, int Max);
 	float Sharp(int value);
 	bool IsPointInBound(int x, int y, int yStart, int yEnd, int xStart, int xEnd);
+
 private:
 	HWND mHWnd;
 	ID2D1Factory* mpFact;
@@ -38,6 +43,7 @@ private:
 	ID2D1HwndRenderTarget* mpRend;
 	ID2D1SolidColorBrush* mpBrOne;
 	Graph* mpGraph;
+	bool mShowCoordHint;
 	int mRColWidthRatio10 = 2;
 	int MousePosX = -1;
 	int MousePosY = -1;
@@ -49,4 +55,11 @@ private:
 	int gf_yEnd = 0;
 	int gf_xMid = 0;
 	int gf_yMid = 0;
+	//Config Related
+	CheckBox CBoxShowXIndLine;
+	CheckBox CBoxShowYIndLine;
+	CheckBox CBoxShowCoordHint;
+	CheckboxBlueprint checkBoxBprint;
+	int CBoxHeight = 0;
+	int CBoxYSpacing = 0;
 };

@@ -18,7 +18,12 @@ Graphics::Graphics() :
 	mpBrOne(nullptr),
 	mpGraph(nullptr),
 	mpTxtFmt(nullptr),
-	mpTxtLyout(nullptr)
+	mpTxtLyout(nullptr),
+	mShowCoordHint(true),
+	checkBoxBprint("NULL"),
+	CBoxShowXIndLine(checkBoxBprint),
+	CBoxShowYIndLine(checkBoxBprint),
+	CBoxShowCoordHint(checkBoxBprint)
 {
 }
 
@@ -85,8 +90,27 @@ bool Graphics::Init(HWND hWnd)
 	hRes = mpRend->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Red), &mpBrOne);
 	GuardD2D1Failure(hRes);
 
+	InitCheckBoxes();
+
 	return true;
 }
+
+void Graphics::InitCheckBoxes()
+{
+	checkBoxBprint = CheckboxBlueprint("Show X Indicator Line");
+	CBoxShowXIndLine = CheckBox(checkBoxBprint);
+	CBoxShowXIndLine.GetBlueprint().SetChecked(mpGraph->GetShowXUsrIndicator());
+
+	checkBoxBprint.SetText("Show Y Indicator Line");
+	CBoxShowYIndLine = CheckBox(checkBoxBprint);
+	CBoxShowYIndLine.GetBlueprint().SetChecked(mpGraph->GetShowYUsrIndicator());
+
+	checkBoxBprint.SetText("Show Coordinate Hint");
+	CBoxShowCoordHint = CheckBox(checkBoxBprint);
+	CBoxShowCoordHint.GetBlueprint().SetChecked(mShowCoordHint);
+
+}
+
 
 void Graphics::Resize(UINT width, UINT height)
 {
@@ -103,6 +127,28 @@ void Graphics::MouseMov(int x, int y)
 	if (MousePosValid(y)) {
 		this->MousePosY = y;
 	}
+	InvalidateRect(mHWnd, NULL, FALSE);
+}
+
+void Graphics::MouseUp(int x, int y)
+{
+	D2D1_RECT_F rect;
+	auto PassClickIfInBound = [this, &rect, &x, &y](CheckBox* cBox, std::function<void(bool)> callback) {
+		rect = cBox->GetCheckBoxRect();
+		if (IsPointInBound(x, y, rect.top, rect.bottom, rect.left, rect.right)) {
+			cBox->PassMouseClick(x, y);
+			callback(cBox->GetBlueprint().GetChecked());
+		}
+	};
+	PassClickIfInBound(&CBoxShowXIndLine, [this](bool checked) {
+		this->mpGraph->SetShowXUsrIndicator(checked);
+	});
+	PassClickIfInBound(&CBoxShowYIndLine, [this](bool checked) {
+		this->mpGraph->SetShowYUsrIndicator(checked);
+	});
+	PassClickIfInBound(&CBoxShowCoordHint, [this](bool checked) {
+		this->mShowCoordHint = checked;
+	});
 	InvalidateRect(mHWnd, NULL, FALSE);
 }
 
@@ -430,8 +476,9 @@ void Graphics::RendCoordHint(RECT rect)
 		gf_yStart,
 		gf_yEnd,
 		gf_xStart,
-		gf_xEnd
-	)) 
+		gf_xEnd) ||
+		!mShowCoordHint
+		) 
 	{
 		return;
 	}
@@ -591,14 +638,13 @@ void Graphics::RendConfigPanel(D2D1_RECT_F configPanel, int yStart, int xStart)
 	D2D1_RECT_F checkBoxesArea = configPanel;
 	checkBoxesArea.top = yStart;
 	checkBoxesArea.left = xStart;
-
-	CheckboxBlueprint checkBoxBprint = CheckboxBlueprint("Show X Indicator Line");
-	const int CBoxHeight = checkBoxBprint.GetHeight();
-	const int CBoxYSpacing = CBoxHeight + 5;
-	int yOffset = 0;
-
-	CheckBox CBoxShowXIndLine = CheckBox(checkBoxBprint);
-	CBoxShowXIndLine.Render(mpRend,mpFactDWrite,mpBrOne,mpTxtFmt,mpTxtLyout, checkBoxesArea.left, checkBoxesArea.top + yOffset);
+	CBoxHeight = checkBoxBprint.GetHeight();
+	CBoxYSpacing = CBoxHeight + 5;
+	int i = 0;
+	CBoxShowXIndLine.Render(mpRend,mpFactDWrite,mpBrOne,mpTxtFmt,mpTxtLyout, checkBoxesArea.left, checkBoxesArea.top + (i++*CBoxYSpacing));
+	CBoxShowYIndLine.Render(mpRend,mpFactDWrite,mpBrOne,mpTxtFmt,mpTxtLyout, checkBoxesArea.left, checkBoxesArea.top + (i++*CBoxYSpacing));
+	CBoxShowCoordHint.Render(mpRend,mpFactDWrite,mpBrOne,mpTxtFmt,mpTxtLyout, checkBoxesArea.left, checkBoxesArea.top + (i++*CBoxYSpacing));
+	
 }
 
 int Graphics::ConvRatioToInt(int ratio10, int Max)
@@ -631,8 +677,18 @@ void Graphics::SetRColWidthRatio(int i10)
 	this->mRColWidthRatio10 = i10;
 }
 
+void Graphics::SetShowCoordHint(bool show)
+{
+	this->mShowCoordHint = show;
+}
+
 int Graphics::GetRColWidthRatio()
 {
 	return this->mRColWidthRatio10;
+}
+
+bool Graphics::GetShowCoordHint()
+{
+	return this->mShowCoordHint;
 }
 
