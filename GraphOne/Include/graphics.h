@@ -56,6 +56,8 @@ private:
 	int gf_yEnd = 0;
 	int gf_xMid = 0;
 	int gf_yMid = 0;
+	float gf_x_Indicator_Spacing = 0;
+	float gf_y_Indicator_Spacing = 0;
 	//Config Related
 	CheckBox CBoxShowXIndLine;
 	CheckBox CBoxShowYIndLine;

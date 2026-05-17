@@ -172,6 +172,8 @@ void Graphics::Render()
 
 void Graphics::RendGraph(RECT rect)
 {
+	gf_x_Indicator_Spacing = 10.0f;
+	gf_y_Indicator_Spacing = 15.0f;
 	const int PADDING = 10;
 	const float INDICATORLINEWIDTH = 1.0f;
 	const float AXISLINEWIDTH = 1.5f;
@@ -181,8 +183,8 @@ void Graphics::RendGraph(RECT rect)
 		mRColWidthRatio10,
 		rect.right - rect.left
 	) + PADDING;
-	gf_xEnd = ((rect.right - rect.left) - PADDING);
-	gf_yStart = (rect.top + PADDING);
+	gf_xEnd = ((rect.right - rect.left) - PADDING - 3*gf_y_Indicator_Spacing);
+	gf_yStart = (rect.top + PADDING + gf_x_Indicator_Spacing);
 	gf_yEnd = ((rect.bottom - rect.top) - PADDING);
 	gf_xMid = ((gf_xStart + gf_xEnd) / 2);
 	gf_yMid = ((gf_yStart + gf_yEnd) / 2);
@@ -253,7 +255,7 @@ void Graphics::RendGraph(RECT rect)
 				DrawCenteredText(
 					std::to_wstring(value),
 					static_cast<float>(currentPos),
-					gf_yStart + 12.0f
+					gf_yStart - gf_x_Indicator_Spacing - 5
 				);
 			}
 
@@ -305,7 +307,7 @@ void Graphics::RendGraph(RECT rect)
 				DrawCenteredText(
 					std::to_wstring(value),
 					static_cast<float>(currentPos),
-					gf_yStart + 12.0f
+					gf_yStart - gf_x_Indicator_Spacing - 5
 				);
 			}
 			int step = mpGraph->GetGridSpace() / 10;
@@ -356,7 +358,7 @@ void Graphics::RendGraph(RECT rect)
 
 				DrawCenteredText(
 					std::to_wstring(value),
-					gf_xEnd - 25.0f,              
+					gf_xEnd + gf_y_Indicator_Spacing,
 					static_cast<float>(currentPos)
 				);
 			}
@@ -407,7 +409,7 @@ void Graphics::RendGraph(RECT rect)
 
 				DrawCenteredText(
 					std::to_wstring(value),
-					gf_xEnd - 25.0f,
+					gf_xEnd + gf_y_Indicator_Spacing,
 					static_cast<float>(currentPos)
 				);
 			}
