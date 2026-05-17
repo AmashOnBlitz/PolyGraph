@@ -19,6 +19,7 @@ public:
 	void SetGraph(Graph* gf);
 	void SetRColWidthRatio(int i10);
 	void SetShowCoordHint(bool show);
+	void DrawCenteredText(const std::wstring& text, float centerX, float centerY, float maxWidth = 100.0f, float maxHeight = 30.0f);
 
 	int GetRColWidthRatio();
 	bool GetShowCoordHint();

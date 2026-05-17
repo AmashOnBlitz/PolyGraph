@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "graphics.h"
 #include "CheckBox.h"
+#include <string>
 
 #define ReleaseD2D1Item(x) if (x) x->Release(); x = NULL;
 #define GuardD2D1Failure(x) if (x != S_OK) return false;
@@ -226,8 +227,6 @@ void Graphics::RendGraph(RECT rect)
 		);
 	}
 	else {
-		const int numbSize = 16;
-		TCHAR numb[numbSize];
 		mpBrOne->SetColor(D2D1::ColorF(mpGraph->GetXRefLinesColor()));
 
 		//Left Side X
@@ -248,37 +247,14 @@ void Graphics::RendGraph(RECT rect)
 					mpBrOne,
 					INDICATORLINEWIDTH
 				);
-
-				StringCchPrintf(
-					numb,
-					numbSize,
-					_TEXT("%d"),
-					leftXBoxIteration * mpGraph->GetScaleX()
-				);
-
-				ReleaseD2D1Item(mpTxtLyout);
-				HRESULT Hr = mpFactDWrite->CreateTextLayout(
-					numb,
-					lstrlen(numb),
-					mpTxtFmt,
-					25,
-					20,
-					&mpTxtLyout
-				);
-				GuardD2D1FailureVoid(Hr);
-
-				DWRITE_TEXT_METRICS txtMetrics;
-				Hr = mpTxtLyout->GetMetrics(&txtMetrics);
-				GuardD2D1FailureVoid(Hr);
-
-				D2D1_POINT_2F textPos = D2D1::Point2F(
-					Sharp(currentPos) + (txtMetrics.layoutWidth/2),
-					gf_yStart
-				);
-				mpRend->DrawTextLayout(textPos, mpTxtLyout, mpBrOne);
-				ReleaseD2D1Item(mpTxtLyout);
-
 				leftXBoxIteration++;
+				int value = -(leftXBoxIteration * mpGraph->GetScaleX());
+
+				DrawCenteredText(
+					std::to_wstring(value),
+					static_cast<float>(currentPos),
+					gf_yStart + 12.0f
+				);
 			}
 
 			int step = mpGraph->GetGridSpace() / 10;
@@ -305,9 +281,12 @@ void Graphics::RendGraph(RECT rect)
 		}
 		//Right Side X
 		currentPos = gf_xMid;
+		int rightXBoxIteration = 0;
+
 		while (currentPos < gf_xEnd)
 		{
-			if (currentPos != gf_xMid) {
+			if (currentPos != gf_xMid)
+			{
 				mpRend->DrawLine(
 					D2D1::Point2F(
 						Sharp(currentPos),
@@ -319,6 +298,14 @@ void Graphics::RendGraph(RECT rect)
 					),
 					mpBrOne,
 					INDICATORLINEWIDTH
+				);
+				rightXBoxIteration++;
+				int value = rightXBoxIteration * mpGraph->GetScaleX();
+
+				DrawCenteredText(
+					std::to_wstring(value),
+					static_cast<float>(currentPos),
+					gf_yStart + 12.0f
 				);
 			}
 			int step = mpGraph->GetGridSpace() / 10;
@@ -348,6 +335,7 @@ void Graphics::RendGraph(RECT rect)
 
 		//Top Side Y
 		currentPos = gf_yMid;
+		int topYBoxIteration = 0;
 		while (currentPos > gf_yStart)
 		{
 			if (currentPos != gf_yMid) {
@@ -362,6 +350,14 @@ void Graphics::RendGraph(RECT rect)
 					),
 					mpBrOne,
 					INDICATORLINEWIDTH
+				);
+				topYBoxIteration++;
+				int value = topYBoxIteration * mpGraph->GetScaleY();
+
+				DrawCenteredText(
+					std::to_wstring(value),
+					gf_xEnd - 25.0f,              
+					static_cast<float>(currentPos)
 				);
 			}
 			int step = mpGraph->GetGridSpace() / 10;
@@ -389,6 +385,7 @@ void Graphics::RendGraph(RECT rect)
 
 		//Bottom Side Y
 		currentPos = gf_yMid;
+		int bottomYBoxIteration = 0;
 		while (currentPos < gf_yEnd)
 		{
 			if (currentPos != gf_yMid) {
@@ -403,6 +400,15 @@ void Graphics::RendGraph(RECT rect)
 					),
 					mpBrOne,
 					INDICATORLINEWIDTH
+				); 
+				
+				bottomYBoxIteration++;
+				int value = -(bottomYBoxIteration * mpGraph->GetScaleY());
+
+				DrawCenteredText(
+					std::to_wstring(value),
+					gf_xEnd - 25.0f,
+					static_cast<float>(currentPos)
 				);
 			}
 			int step = mpGraph->GetGridSpace() / 10;
@@ -715,6 +721,51 @@ void Graphics::SetRColWidthRatio(int i10)
 void Graphics::SetShowCoordHint(bool show)
 {
 	this->mShowCoordHint = show;
+}
+
+void Graphics::DrawCenteredText(
+	const std::wstring& text,
+	float centerX,
+	float centerY,
+	float maxWidth,
+	float maxHeight
+)
+{
+	ReleaseD2D1Item(mpTxtLyout);
+
+	HRESULT hr = mpFactDWrite->CreateTextLayout(
+		text.c_str(),
+		static_cast<UINT32>(text.length()),
+		mpTxtFmt,
+		maxWidth,
+		maxHeight,
+		&mpTxtLyout
+	);
+	GuardD2D1FailureVoid(hr);
+
+	hr = mpTxtLyout->SetFontWeight(
+		DWRITE_FONT_WEIGHT_BOLD,
+		DWRITE_TEXT_RANGE{
+			0,
+			static_cast<UINT32>(text.length())
+		}
+	);
+	GuardD2D1FailureVoid(hr);
+
+	DWRITE_TEXT_METRICS metrics;
+	hr = mpTxtLyout->GetMetrics(&metrics);
+	GuardD2D1FailureVoid(hr);
+
+	float x = centerX - (metrics.width / 2.0f);
+	float y = centerY - (metrics.height / 2.0f);
+
+	mpRend->DrawTextLayout(
+		D2D1::Point2F(x, y),
+		mpTxtLyout,
+		mpBrOne
+	);
+
+	ReleaseD2D1Item(mpTxtLyout);
 }
 
 int Graphics::GetRColWidthRatio()
