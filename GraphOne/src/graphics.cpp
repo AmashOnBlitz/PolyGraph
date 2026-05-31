@@ -9,6 +9,8 @@
 #define MousePosValid(x) ((x) > 0)
 #define TEXT_FONT_PRIMARY L"SF Pro Text"
 #define TEXT_FONT_SECONDARY L"Bahnschrift"
+#define CORNER_ROUNDING_X 4.0f
+#define CORNER_ROUNDING_Y CORNER_ROUNDING_X 
 //#define TEXT_FONT L"SF Pro Display"
 
 Graphics::Graphics() :
@@ -98,7 +100,14 @@ bool Graphics::Init(HWND hWnd)
 
 void Graphics::InitCheckBoxes()
 {
-	checkBoxBprint = CheckboxBlueprint("Show X Indicator Line");
+	checkBoxBprint = CheckboxBlueprint(
+		"Show X Indicator Line",
+		false,
+		20, -1,
+		CORNER_ROUNDING_X,
+		CORNER_ROUNDING_Y
+	);
+
 	CBoxShowXIndLine = CheckBox(checkBoxBprint);
 	CBoxShowXIndLine.GetBlueprint().SetChecked(mpGraph->GetShowXUsrIndicator());
 
@@ -599,8 +608,14 @@ void Graphics::RendCoordHint(RECT rect)
 		hintRect.bottom = hintRect.top + height;
 	}
 
+	D2D1_ROUNDED_RECT roundedHintRect = D2D1::RoundedRect(
+		hintRect,
+		CORNER_ROUNDING_X,
+		CORNER_ROUNDING_Y
+	);
+
 	mpBrOne->SetColor(D2D1::ColorF(D2D1::ColorF::Green));
-	mpRend->FillRectangle(hintRect, mpBrOne);
+	mpRend->FillRoundedRectangle(roundedHintRect, mpBrOne);
 
 	mpBrOne->SetColor(D2D1::ColorF(D2D1::ColorF::Black));
 

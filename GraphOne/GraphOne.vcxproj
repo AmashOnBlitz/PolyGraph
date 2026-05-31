@@ -145,6 +145,8 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="Widgets\CheckBox.cpp" />
     <ClCompile Include="Widgets\CheckBoxBlueprint.cpp" />
+    <ClCompile Include="Widgets\DigitBox.cpp" />
+    <ClCompile Include="Widgets\DigitBoxBlueprint.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\App.h" />
@@ -152,6 +154,7 @@
     <ClInclude Include="Include\graphics.h" />
     <ClInclude Include="Pch\pch.h" />
     <ClInclude Include="Widgets\CheckBox.h" />
+    <ClInclude Include="Widgets\DigitBox.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
