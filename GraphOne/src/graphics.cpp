@@ -26,7 +26,8 @@ Graphics::Graphics() :
 	checkBoxBprint("NULL"),
 	CBoxShowXIndLine(checkBoxBprint),
 	CBoxShowYIndLine(checkBoxBprint),
-	CBoxShowCoordHint(checkBoxBprint)
+	CBoxShowCoordHint(checkBoxBprint),
+	digitBox(digitBoxBlueprint)
 {
 }
 
@@ -119,6 +120,13 @@ void Graphics::InitCheckBoxes()
 	CBoxShowCoordHint = CheckBox(checkBoxBprint);
 	CBoxShowCoordHint.GetBlueprint().SetChecked(mShowCoordHint);
 
+}
+
+void Graphics::InitdigitBoxes()
+{
+	digitBoxBlueprint = DigitBoxBlueprint("90d9");
+
+	digitBox = DigitBox(digitBoxBlueprint);
 }
 
 void Graphics::Resize(UINT width, UINT height)
@@ -702,6 +710,9 @@ void Graphics::RendConfigPanel(D2D1_RECT_F configPanel, int yStart, int xStart)
 	CBoxShowXIndLine.Render(mpRend,mpFactDWrite,mpBrOne,mpTxtFmt,mpTxtLyout, checkBoxesArea.left, checkBoxesArea.top + (i++*CBoxYSpacing));
 	CBoxShowYIndLine.Render(mpRend,mpFactDWrite,mpBrOne,mpTxtFmt,mpTxtLyout, checkBoxesArea.left, checkBoxesArea.top + (i++*CBoxYSpacing));
 	CBoxShowCoordHint.Render(mpRend,mpFactDWrite,mpBrOne,mpTxtFmt,mpTxtLyout, checkBoxesArea.left, checkBoxesArea.top + (i++*CBoxYSpacing));
+
+
+	digitBox.Render(mpRend,mpFactDWrite,mpBrOne,mpTxtFmt,mpTxtLyout, checkBoxesArea.left, checkBoxesArea.top + 0);
 	
 }
 

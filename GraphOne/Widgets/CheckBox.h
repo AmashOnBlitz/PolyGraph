@@ -77,7 +77,7 @@ public:
 	void PassMouseClick(int xPos, int yPos);
 	void SetBlueprint(CheckboxBlueprint blueprint);
 	CheckboxBlueprint& GetBlueprint();
-	D2D1_RECT_F GetCheckBoxRect();
+	D2D1_RECT_F& GetCheckBoxRect();
 
 private:
 	bool isPointInBound(int x, int y, D2D1_RECT_F& rect);

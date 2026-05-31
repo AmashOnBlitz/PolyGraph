@@ -122,7 +122,7 @@ CheckboxBlueprint& CheckBox::GetBlueprint()
 	return this->mBlueprint;
 }
 
-D2D1_RECT_F CheckBox::GetCheckBoxRect()
+D2D1_RECT_F& CheckBox::GetCheckBoxRect()
 {
 	return this->checkBoxRect;
 }

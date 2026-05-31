@@ -2,17 +2,17 @@
 #include <DigitBox.h>
 
 DigitBoxBlueprint::DigitBoxBlueprint(
-	std::string intialText = "",
-	std::string placeholderText = "",
-	int w = 40,
-	int h = 20,
-	int xRoundRadius = 4,
-	int yRoundRadius = -1,
-	D2D1::ColorF BackgroundCol = D2D1::ColorF::White,
-	D2D1::ColorF BorderCol = D2D1::ColorF::Gray,
-	D2D1::ColorF TextCol = D2D1::ColorF::Black,
-	int xTxtPadding = 5,
-	int yTxtPadding = 5
+	std::string intialText,
+	std::string placeholderText,
+	int w,
+	int h,
+	int xRoundRadius,
+	int yRoundRadius,
+	D2D1::ColorF BackgroundCol,
+	D2D1::ColorF BorderCol,
+	D2D1::ColorF TextCol,
+	int xTxtPadding,
+	int yTxtPadding
 ) : 
 	mInitialTxt(GetNumFromStr(intialText)),
 	mPlaceHolderTxt(GetNumFromStr(placeholderText)),
@@ -62,17 +62,17 @@ void DigitBoxBlueprint::SetYRoundRadius(int r)
 	this->mYRoundRad = r;
 }
 
-void DigitBoxBlueprint::SetBackgroundColor(D2D1_COLOR_F color)
+void DigitBoxBlueprint::SetBackgroundColor(D2D1::ColorF color)
 {
 	this->mBackgroundCol = color;
 }
 
-void DigitBoxBlueprint::SetBorderColor(D2D1_COLOR_F color)
+void DigitBoxBlueprint::SetBorderColor(D2D1::ColorF color)
 {
 	this->mBorderCol = color;
 }
 
-void DigitBoxBlueprint::SetTextColor(D2D1_COLOR_F color)
+void DigitBoxBlueprint::SetTextColor(D2D1::ColorF color)
 {
 	this->mTxtCol = color;
 }
@@ -127,17 +127,17 @@ int DigitBoxBlueprint::GetXTextPadding()
 	return this->mXTxtPadding;
 }
 
-D2D1_COLOR_F DigitBoxBlueprint::GetBackgroundColor()
+D2D1::ColorF DigitBoxBlueprint::GetBackgroundColor()
 {
 	return this->mBackgroundCol;
 }
 
-D2D1_COLOR_F DigitBoxBlueprint::GetBorderColor()
+D2D1::ColorF DigitBoxBlueprint::GetBorderColor()
 {
 	return this->mBorderCol;
 }
 
-D2D1_COLOR_F DigitBoxBlueprint::GetTextColor()
+D2D1::ColorF DigitBoxBlueprint::GetTextColor()
 {
 	return this->mTxtCol;
 }
@@ -148,4 +148,5 @@ std::string DigitBoxBlueprint::GetNumFromStr(std::string str)
 	for (int i{ 0 }; i < str.length(); i++) {
 		if (std::isdigit(str[i])) filterStr += str[i];
 	}
+	return filterStr;
 }

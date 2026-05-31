@@ -3,6 +3,7 @@
 #include <dwrite.h>
 #include <graph.h>
 #include "CheckBox.h"
+#include <DigitBox.h>
 #include <vector>
 
 class Graphics
@@ -27,6 +28,7 @@ public:
 
 private:
 	void InitCheckBoxes();
+	void InitdigitBoxes();
 	void RendGraph(RECT rect);
 	void RendCoordHint(RECT rect);
 	void RendWidgetsPanel(RECT rect);
@@ -65,4 +67,6 @@ private:
 	CheckboxBlueprint checkBoxBprint;
 	int CBoxHeight = 0;
 	int CBoxYSpacing = 0;
+	DigitBoxBlueprint digitBoxBlueprint;
+	DigitBox digitBox;
 };
