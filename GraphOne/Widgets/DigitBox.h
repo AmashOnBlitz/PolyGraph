@@ -4,6 +4,7 @@
 
 class DigitBoxBlueprint {
 public:
+	// Note : From text strings only number will be extracted, stored and shown
 	DigitBoxBlueprint(
 		std::string intialText = "",
 		std::string placeholderText = "",
@@ -19,7 +20,9 @@ public:
 	);
 	~DigitBoxBlueprint();
 
+	// Note : From text strings only number will be extracted, stored and shown
 	void SetInitialText(std::string txt);
+	// Note : From text strings only number will be extracted, stored and shown
 	void SetPlaceHolderText(std::string txt);
 	void SetWidth(int x);
 	void SetHeight(int y);
@@ -43,6 +46,9 @@ public:
 	D2D1_COLOR_F GetBorderColor();
 	D2D1_COLOR_F GetTextColor();
 
+private: //funcs 
+	std::string GetNumFromStr(std::string str);
+
 private:
 	std::string mInitialTxt;
 	std::string mPlaceHolderTxt;
@@ -52,7 +58,7 @@ private:
 	int mYRoundRad;
 	int mYTxtPadding;
 	int mXTxtPadding;
-	D2D1_COLOR_F mBgCol;
+	D2D1_COLOR_F mBackgroundCol;
 	D2D1_COLOR_F mBorderCol;
 	D2D1_COLOR_F mTxtCol;
 };

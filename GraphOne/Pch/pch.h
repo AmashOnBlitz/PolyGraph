@@ -4,6 +4,7 @@
 #include <tchar.h>
 #include <strsafe.h>
 #include <iostream>
+#include <cctype> 
 #include <vector>
 #include <functional>
 #include <d2d1.h>
