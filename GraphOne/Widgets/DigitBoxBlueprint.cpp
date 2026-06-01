@@ -2,7 +2,7 @@
 #include <DigitBox.h>
 
 DigitBoxBlueprint::DigitBoxBlueprint(
-	std::string intialText,
+	std::string text,
 	std::string placeholderText,
 	int w,
 	int h,
@@ -10,21 +10,25 @@ DigitBoxBlueprint::DigitBoxBlueprint(
 	int yRoundRadius,
 	D2D1::ColorF BackgroundCol,
 	D2D1::ColorF BorderCol,
+	D2D1::ColorF ActiveBorderCol,
 	D2D1::ColorF TextCol,
+	float BorderWidth,
 	int xTxtPadding,
 	int yTxtPadding
 ) : 
-	mInitialTxt(GetNumFromStr(intialText)),
-	mPlaceHolderTxt(GetNumFromStr(placeholderText)),
+	mTxt(GetNumFromStr(text)),
+	mPlaceHolderTxt(placeholderText),
 	mWidth(w),
 	mHeight(h),
 	mXRoundRad(xRoundRadius),
 	mYRoundRad(yRoundRadius),
 	mBackgroundCol(BackgroundCol),
 	mBorderCol(BorderCol),
+	mActiveBorderCol(ActiveBorderCol),
 	mTxtCol(TextCol),
 	mXTxtPadding(xTxtPadding),
-	mYTxtPadding(yTxtPadding)
+	mYTxtPadding(yTxtPadding),
+	mBorderWidth(BorderWidth)
 {
 }
 
@@ -32,14 +36,14 @@ DigitBoxBlueprint::~DigitBoxBlueprint()
 {
 }
 
-void DigitBoxBlueprint::SetInitialText(std::string txt)
+void DigitBoxBlueprint::SetText(std::string txt)
 {
-	this->mInitialTxt = GetNumFromStr(txt);
+	this->mTxt = GetNumFromStr(txt);
 }
 
 void DigitBoxBlueprint::SetPlaceHolderText(std::string txt)
 {
-	this->mPlaceHolderTxt = GetNumFromStr(txt);
+	this->mPlaceHolderTxt = txt;
 }
 
 void DigitBoxBlueprint::SetWidth(int x)
@@ -72,6 +76,11 @@ void DigitBoxBlueprint::SetBorderColor(D2D1::ColorF color)
 	this->mBorderCol = color;
 }
 
+void DigitBoxBlueprint::SetActiveBorderColor(D2D1::ColorF color)
+{
+	this->mActiveBorderCol = color;
+}
+
 void DigitBoxBlueprint::SetTextColor(D2D1::ColorF color)
 {
 	this->mTxtCol = color;
@@ -87,9 +96,14 @@ void DigitBoxBlueprint::SetXTextPadding(int x)
 	this->mXTxtPadding = x;
 }
 
-std::string DigitBoxBlueprint::GetInitialText()
+void DigitBoxBlueprint::SetBorderWidth(int w)
 {
-	return this->mInitialTxt;
+	this->mBorderWidth = w;
+}
+
+std::string DigitBoxBlueprint::GetText()
+{
+	return this->mTxt;
 }
 
 std::string DigitBoxBlueprint::GetPlaceHolderText()
@@ -127,6 +141,11 @@ int DigitBoxBlueprint::GetXTextPadding()
 	return this->mXTxtPadding;
 }
 
+float DigitBoxBlueprint::GetBorderWidth()
+{
+	return this->mBorderWidth;
+}
+
 D2D1::ColorF DigitBoxBlueprint::GetBackgroundColor()
 {
 	return this->mBackgroundCol;
@@ -135,6 +154,11 @@ D2D1::ColorF DigitBoxBlueprint::GetBackgroundColor()
 D2D1::ColorF DigitBoxBlueprint::GetBorderColor()
 {
 	return this->mBorderCol;
+}
+
+D2D1::ColorF DigitBoxBlueprint::GetActiveBorderColor()
+{
+	return this->mActiveBorderCol;
 }
 
 D2D1::ColorF DigitBoxBlueprint::GetTextColor()
@@ -150,3 +174,4 @@ std::string DigitBoxBlueprint::GetNumFromStr(std::string str)
 	}
 	return filterStr;
 }
+

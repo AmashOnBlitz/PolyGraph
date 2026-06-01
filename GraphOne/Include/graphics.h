@@ -16,6 +16,8 @@ public:
 	void Resize(UINT width, UINT height);
 	void MouseMov(int x, int y);
 	void MouseUp(int x, int y);
+	void CharKeyDown(char c);
+	void SpclKeyDown(WPARAM wParam);
 	void Render();
 	void SetGraph(Graph* gf);
 	void SetRColWidthRatio(int i10);

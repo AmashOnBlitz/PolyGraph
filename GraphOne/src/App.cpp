@@ -113,6 +113,11 @@ LRESULT APP::WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		if (gfx) gfx->MouseUp(x, y);
 		break;
 	}
+	case WM_CHAR: {
+		TCHAR ch = (TCHAR)(wParam);
+		if (gfx) gfx->CharKeyDown(ch);
+		break;
+	}
 	case WM_SIZE:
 	{
 		if (gfx)

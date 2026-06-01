@@ -95,6 +95,7 @@ bool Graphics::Init(HWND hWnd)
 	GuardD2D1Failure(hRes);
 
 	InitCheckBoxes();
+	InitdigitBoxes();
 
 	return true;
 }
@@ -124,8 +125,7 @@ void Graphics::InitCheckBoxes()
 
 void Graphics::InitdigitBoxes()
 {
-	digitBoxBlueprint = DigitBoxBlueprint("90d9");
-
+	digitBoxBlueprint = DigitBoxBlueprint("", "Enter your value ...", 200, 20, CORNER_ROUNDING_X, CORNER_ROUNDING_Y);
 	digitBox = DigitBox(digitBoxBlueprint);
 }
 
@@ -150,23 +150,56 @@ void Graphics::MouseMov(int x, int y)
 void Graphics::MouseUp(int x, int y)
 {
 	D2D1_RECT_F rect;
-	auto PassClickIfInBound = [this, &rect, &x, &y](CheckBox* cBox, std::function<void(bool)> callback) {
+	auto CBPassClickIfInBound = [this, &rect, &x, &y](CheckBox* cBox, std::function<void(bool)> callback) {
 		rect = cBox->GetCheckBoxRect();
 		if (IsPointInBound(x, y, rect.top, rect.bottom, rect.left, rect.right)) {
 			cBox->PassMouseClick(x, y);
 			callback(cBox->GetBlueprint().GetChecked());
 		}
 	};
-	PassClickIfInBound(&CBoxShowXIndLine, [this](bool checked) {
+	CBPassClickIfInBound(&CBoxShowXIndLine, [this](bool checked) {
 		this->mpGraph->SetShowXUsrIndicator(checked);
 	});
-	PassClickIfInBound(&CBoxShowYIndLine, [this](bool checked) {
+	CBPassClickIfInBound(&CBoxShowYIndLine, [this](bool checked) {
 		this->mpGraph->SetShowYUsrIndicator(checked);
 	});
-	PassClickIfInBound(&CBoxShowCoordHint, [this](bool checked) {
+	CBPassClickIfInBound(&CBoxShowCoordHint, [this](bool checked) {
 		this->mShowCoordHint = checked;
 	});
+
+	rect = digitBox.GetBoxRect().rect;
+	if (IsPointInBound(x, y, rect.top, rect.bottom, rect.left, rect.right)) {
+		if (!digitBox.GetFocused()) digitBox.SetFocused(true);
+	}
+	else {
+		if (digitBox.GetFocused()) digitBox.SetFocused(false);
+	}
 	InvalidateRect(mHWnd, NULL, FALSE);
+}
+
+void Graphics::CharKeyDown(char c)
+{
+   // char txt[2];
+   // txt[0] = c;
+   // txt[1] = '\0';
+   // MessageBoxA(NULL, txt, txt, MB_ICONINFORMATION);
+   // TODO: Implement Func and route to digit boxes 
+}
+
+void Graphics::SpclKeyDown(WPARAM wParam)
+{
+	// TODO: Implement Func and route to digit boxes 
+	switch (wParam)
+	{
+	case VK_RIGHT: {
+		break;
+	}
+	case VK_LEFT: {
+		break;
+	}
+	default:
+		break;
+	}
 }
 
 void Graphics::Render()
@@ -712,7 +745,7 @@ void Graphics::RendConfigPanel(D2D1_RECT_F configPanel, int yStart, int xStart)
 	CBoxShowCoordHint.Render(mpRend,mpFactDWrite,mpBrOne,mpTxtFmt,mpTxtLyout, checkBoxesArea.left, checkBoxesArea.top + (i++*CBoxYSpacing));
 
 
-	digitBox.Render(mpRend,mpFactDWrite,mpBrOne,mpTxtFmt,mpTxtLyout, checkBoxesArea.left, checkBoxesArea.top + 0);
+	digitBox.Render(mpRend,mpFactDWrite,mpBrOne,mpTxtFmt,mpTxtLyout, checkBoxesArea.left, checkBoxesArea.top + (i++ * CBoxYSpacing));
 	
 }
 
